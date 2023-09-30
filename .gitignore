@@ -2,3 +2,5 @@ conf.env
 .venv
 _pycache
 __pycache__/
+.idea
+.vscode

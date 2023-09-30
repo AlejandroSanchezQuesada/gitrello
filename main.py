@@ -18,23 +18,20 @@ last_webhook = None
 #esta es la url que escucha los post de los webhooks
 @app.route('/', methods=['POST'])
 def webhook():
-    print("Ha entrado la petición");
     global last_webhook
     data = request.json
     
-    
-    print("la request es {request}")
-    print("la request json es {request.json}")
-
-    # Procesar el webhook recibido
-    # Puedes agregar aquí la lógica para manejar los eventos del webhook
-
     # Actualizar last_webhook con el webhook recibido
     last_webhook = data
 
+    # Procesar el webhook recibido
     # Imprimir el webhook en la consola
-    print("Nuevo webhook recibido:")
-    print(data)
+    print("Nuevo webhook recibido")
+    print(f"Nombre del tablero :{data['action']['data']['board']['name']}")
+    print(f"id Lista del Tablero :{data['action']['data']['list']['id']}")
+    print(f"Lista del tablero :{data['action']['data']['list']['name']}")
+    print(f"Cambios o nueva tarjeta :{data['action']['data']['card']['id']} \n {data['action']['data']['card']['name']} \n  {data['action']['data']['card']['desc']} ")
+    
 
     return jsonify({"message": "Webhook recibido correctamente"})
 
