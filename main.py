@@ -18,23 +18,14 @@ if __name__ == '__main__':
 
 @app.route("/")
 def hello_world():
-    return "<p>Gitrello actualizado</p>"
-
-
+    return "<p>Gitrello App</p>"
 
 # Endpoint that listens the webhooks
 @app.route('/', methods=['POST'])
 def webhook():
     return TrelloServices.process_json(request.json)
 
-    
 
 @app.route('/latest_webhook', methods=['GET'])
 def get_latest_webhook():
     return TrelloServices.get_latest_webhook()
-
-
-@app.route("/test")
-def test():
-    GithubServices.create_issue()
-    return "<p>Probando issue</p>"
