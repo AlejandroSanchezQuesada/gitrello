@@ -1,10 +1,17 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+from database.database import init_db
 from services import services
 
 app = Flask(__name__)
 CORS(app)
 #cors = CORS(app, resources={r"/webhook": {"origins": "https://trello.com"}})
+
+# Database configuration
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost:5432/gitrello'
+init_db(app)
+
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
@@ -15,7 +22,7 @@ def hello_world():
 
 
 
-#esta es la url que escucha los post de los webhooks
+# Endpoint that listens the webhooks
 @app.route('/', methods=['POST'])
 def webhook():
     return services.process_json(request.json)
