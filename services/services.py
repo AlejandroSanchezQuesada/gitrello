@@ -10,12 +10,19 @@ def process_json(data):
     global last_webhook
     last_webhook = data;
     
-    new_board = Board(id_list=data['action']['data']['list']['id'],
-                      name_list=data['action']['data']['list']['name'],
-                      id_card=data['action']['data']['card']['id'],
-                      name_card=data['action']['data']['card']['name'],
-                      desc_card=data['action']['data']['card']['desc'])
-    
+    id_list = get_nested_value(data, ['action', 'data', 'list', 'id'])
+    name_list = get_nested_value(data, ['action', 'data', 'list', 'name'])
+    id_card = get_nested_value(data, ['action', 'data', 'card', 'id'])
+    name_card = get_nested_value(data, ['action', 'data', 'card', 'name'])
+    desc_card = get_nested_value(data, ['action', 'data', 'card', 'desc'])
+
+    new_board = Board(
+        id_list=id_list,
+        name_list=name_list,
+        id_card=id_card,
+        name_card=name_card,
+        desc_card=desc_card
+    )
     insert_or_update_board_data(new_board)
     
     return jsonify({"message": "Webhook recibido correctamente"})
@@ -65,3 +72,19 @@ def update_board_data(id_to_update, new_id_list, new_name_list,new_name_card, ne
         print(f"Tarjeta del tablero {new_name_list} actualizada con éxito")
     else:
         return print(f"La actualización de datos ha fallado")
+    
+def get_nested_value(dictionary, keys, default=None):
+    """
+    Obtener el valor anidado de un diccionario de manera segura.
+
+    :param dictionary: El diccionario en el que buscar.
+    :param keys: Una lista de claves para acceder al valor deseado.
+    :param default: Valor predeterminado a devolver si no se encuentra la clave.
+    :return: El valor encontrado o el valor predeterminado si no se encuentra.
+    """
+    for key in keys:
+        if key in dictionary:
+            dictionary = dictionary[key]
+        else:
+            return default
+    return dictionary
