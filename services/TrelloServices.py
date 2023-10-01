@@ -1,6 +1,7 @@
 from flask import jsonify
 from database.database import db
 from database.database import Board 
+from services import GithubServices
 
 # Variable to save the latest webhook
 last_webhook = None
@@ -55,6 +56,7 @@ def check_if_record_exists(id_to_check):
 def create_board_data(new_board):
     db.session.add(new_board)
     db.session.commit()
+    GithubServices.create_issue(new_board)
     
 def update_board_data(id_to_update, new_id_list, new_name_list,new_name_card, new_desc_card):
     # Check if the board with the specified ID exists
@@ -69,6 +71,7 @@ def update_board_data(id_to_update, new_id_list, new_name_list,new_name_card, ne
 
         # Commit the changes to the database
         db.session.commit()
+        GithubServices.create_issue(existing_board)
         print(f"Tarjeta del tablero {new_name_list} actualizada con éxito")
     else:
         return print(f"La actualización de datos ha fallado")
